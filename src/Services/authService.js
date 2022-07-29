@@ -1,14 +1,13 @@
-import createToken from '../utils/createToken';
+import usersRepository from '../Repositories/usersRepository.js';
+import createToken from '../utils/createToken.js';
+import encryptFunctions from '../utils/encryptFunctions.js';
+import usersService from './usersService.js';
 
-async function login() {
-	const user = await validEmailUser(data.email);
+async function login(loginData) {
+	const user = await usersService.validEmailUser(loginData.email);
+	await encryptFunctions.compareEncrypted(loginData.password, user.password);
 
-	await encryptFunctions.compareEncrypted(data.password, user.password);
-
-	createToken(user.id);
-
-	await userRepository.sessionInsert(token);
-	return token;
+	return createToken(user.id);
 }
 
 export default {

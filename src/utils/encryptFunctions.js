@@ -11,9 +11,7 @@ async function compareEncrypted(data, hash) {
 	if (!match) throw errors.unauthorizedError('e-mail or password');
 }
 
-const encryptFunctions = {
+export default {
 	encryptData,
 	compareEncrypted,
 };
-
-export default encryptFunctions;
