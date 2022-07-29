@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  email    String @unique
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  email    String  @unique
   key      String
   password String
+  active   Boolean @default(true)
 
   @@map("users")
 }
