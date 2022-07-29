@@ -20,3 +20,22 @@ model User {
 
   @@map("users")
 }
+
+model Product {
+  id            Int         @id @default(autoincrement())
+  name          String
+  value         Int
+  quantity      Int         @default(0)
+  productTypeId Int
+  ProductType   ProductType @relation(references: [id], fields: [productTypeId])
+
+  @@map("products")
+}
+
+model ProductType {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Product Product[]
+
+  @@map("productsTypes")
+}

@@ -6,6 +6,7 @@ const createUserSchema = joi.object({
 	password: joi.string().required(),
 	key: joi.string().required(),
 	active: joi.boolean(),
+	authorizationKey: joi.string().required(),
 });
 
 export default createUserSchema;
