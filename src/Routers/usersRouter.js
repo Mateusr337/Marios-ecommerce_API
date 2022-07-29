@@ -11,4 +11,6 @@ usersRouter.post(
 	usersController.create
 );
 
+usersRouter.get('/', usersController.find);
+
 export default usersRouter;

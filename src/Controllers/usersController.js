@@ -5,6 +5,12 @@ async function create(req, res) {
 	res.sendStatus(201);
 }
 
+async function find(req, res) {
+	const users = await usersService.find();
+	res.status(200).send(users);
+}
+
 export default {
 	create,
+	find,
 };
