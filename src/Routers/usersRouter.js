@@ -5,11 +5,7 @@ import createUserSchema from '../schemas/createUserSchema.js';
 
 const usersRouter = Router();
 
-usersRouter.post(
-	'/create',
-	validateSchemaMiddleware(createUserSchema),
-	usersController.create
-);
+usersRouter.post('/', validateSchemaMiddleware(createUserSchema), usersController.create);
 
 usersRouter.get('/', usersController.find);
 

@@ -1,8 +1,8 @@
 import usersService from '../Services/usersService.js';
 
 async function create(req, res) {
-	await usersService.create(req.body);
-	res.sendStatus(201);
+	const user = await usersService.create(req.body);
+	res.status(201).send(user);
 }
 
 async function find(req, res) {

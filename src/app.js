@@ -1,5 +1,5 @@
-import errorFunctions from './utils/errorFunctions.js';
 import './setup.js';
+import errorFunctions from './utils/errorFunctions.js';
 import cors from 'cors';
 import express, { json } from 'express';
 import 'express-async-errors';
