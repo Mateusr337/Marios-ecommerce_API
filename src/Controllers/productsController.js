@@ -7,11 +7,12 @@ async function create({ body }, res) {
 	res.status(201).send(product);
 }
 
-async function update({ body }, res) {
-	const { id } = body;
+async function update({ body, params }, res) {
+	const id = parseInt(params.id);
+	const { user } = res.locals;
 	delete body.id;
 
-	const product = await productsService.update(id, body);
+	const product = await productsService.update(id, body, user);
 	res.send(product).status(204);
 }
 

@@ -2,22 +2,21 @@ import productsRepository from '../Repositories/productsRepository.js';
 import accessKeys from '../utils/accessKeys.js';
 import errorFunctions from '../utils/errorFunctions.js';
 
-async function create(product, user) {
-	console.log(user);
+async function create(createProductData, user) {
 	if (user.key !== accessKeys.manager && user.key !== accessKeys.stock)
 		return errorFunctions.unauthorizedError();
 
-	const foundProduct = await productsRepository.findByName(product.name);
+	const foundProduct = await productsRepository.findByName(createProductData.name);
 	if (foundProduct) throw errorFunctions.conflictRequestError('name');
 
-	return await productsRepository.create(product);
+	return await productsRepository.create(createProductData);
 }
 
-async function update(id, updateProductData) {
+async function update(id, updateProductData, user) {
 	if (user.key !== accessKeys.manager && user.key !== accessKeys.stock)
 		return errorFunctions.unauthorizedError();
 
-	return await productsRepository.create(id, updateProductData);
+	return await productsRepository.update(id, updateProductData);
 }
 
 export default {

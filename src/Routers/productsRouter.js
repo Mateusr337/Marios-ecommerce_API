@@ -14,7 +14,7 @@ productsRouter.post(
 );
 
 productsRouter.patch(
-	'/',
+	'/:id',
 	ensureAuthenticatedMiddleware,
 	validateSchemaMiddleware(createProductSchema),
 	productsController.update
