@@ -1,7 +1,9 @@
 import productsService from '../Services/productsService.js';
 
 async function create({ body }, res) {
-	const product = await productsService.create(body);
+	const { user } = res.locals;
+
+	const product = await productsService.create(body, user);
 	res.status(201).send(product);
 }
 
