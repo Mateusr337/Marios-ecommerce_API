@@ -8,6 +8,11 @@ async function create(product) {
 	return await productsRepository.create(product);
 }
 
+async function update(id, updateProductData) {
+	return await productsRepository.create(id, updateProductData);
+}
+
 export default {
 	create,
+	update,
 };

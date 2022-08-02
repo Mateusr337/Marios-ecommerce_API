@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-import userService from '../services/userService.js';
+import usersService from '../Services/usersService.js';
 import errorFunctions from '../utils/errorFunctions.js';
 
-export async function ensureAuthenticatedMiddleware(req, res, next) {
+export default async function ensureAuthenticatedMiddleware(req, res, next) {
 	const authorization = req.headers.authorization;
 	if (!authorization)
 		throw errorFunctions.unauthorizedError('Missing authorization header');
@@ -12,7 +12,7 @@ export async function ensureAuthenticatedMiddleware(req, res, next) {
 
 	try {
 		const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-		const user = await userService.findById(userId);
+		const user = await usersService.findById(userId);
 		res.locals.user = user;
 
 		next();

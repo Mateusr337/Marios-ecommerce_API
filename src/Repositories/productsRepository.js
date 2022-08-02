@@ -12,8 +12,13 @@ async function find() {
 	return await database.product.findFirst();
 }
 
+async function update(id, updateProductData) {
+	return await database.product.update({ where: { id }, data: updateProductData });
+}
+
 export default {
 	create,
 	findByName,
 	find,
+	update,
 };

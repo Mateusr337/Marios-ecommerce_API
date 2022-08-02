@@ -31,8 +31,13 @@ async function validateKey(key) {
 	throw errorFunctions.unauthorizedError("you can't create user");
 }
 
+async function findById(id) {
+	return await usersRepository.findById(id);
+}
+
 export default {
 	create,
 	find,
 	validEmailUser,
+	findById,
 };
