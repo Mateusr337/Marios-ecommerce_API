@@ -33,9 +33,17 @@ async function find(user) {
 	return await productsRepository.find();
 }
 
+async function findById(id, user) {
+	if (user.key !== accessKeys.manager && user.key !== accessKeys.stock)
+		return errorFunctions.unauthorizedError();
+
+	return await productsRepository.findById(id);
+}
+
 export default {
 	create,
 	update,
 	remove,
 	find,
+	findById,
 };

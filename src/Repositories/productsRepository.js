@@ -12,6 +12,10 @@ async function find() {
 	return await database.product.findMany();
 }
 
+async function findById(id) {
+	return await database.product.findUnique({ where: { id } });
+}
+
 async function update(id, updateProductData) {
 	return await database.product.update({ where: { id }, data: updateProductData });
 }
@@ -26,4 +30,5 @@ export default {
 	find,
 	update,
 	remove,
+	findById,
 };

@@ -31,9 +31,18 @@ async function find(req, res) {
 	res.send(products).status(200);
 }
 
+async function findById({ params }, res) {
+	const { user } = res.locals;
+	const id = parseInt(params.id);
+
+	const product = await productsService.findById(id, user);
+	res.send(product).status(200);
+}
+
 export default {
 	create,
 	update,
 	remove,
 	find,
+	findById,
 };

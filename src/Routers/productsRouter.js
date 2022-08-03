@@ -13,8 +13,6 @@ productsRouter.post(
 	productsController.create
 );
 
-productsRouter.get('/', ensureAuthenticatedMiddleware, productsController.find);
-
 productsRouter.patch(
 	'/:id',
 	ensureAuthenticatedMiddleware,
@@ -22,6 +20,8 @@ productsRouter.patch(
 	productsController.update
 );
 
+productsRouter.get('/', ensureAuthenticatedMiddleware, productsController.find);
+productsRouter.get('/:id', ensureAuthenticatedMiddleware, productsController.findById);
 productsRouter.delete('/:id', ensureAuthenticatedMiddleware, productsController.remove);
 
 export default productsRouter;
