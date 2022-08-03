@@ -24,10 +24,11 @@ async function remove({ params }, res) {
 	res.sendStatus(204);
 }
 
-async function find(req, res) {
+async function find({ query }, res) {
 	const { user } = res.locals;
+	const { name } = query;
 
-	const products = await productsService.find(user);
+	const products = await productsService.find(user, name);
 	res.send(products).status(200);
 }
 

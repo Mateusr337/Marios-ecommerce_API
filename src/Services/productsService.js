@@ -26,9 +26,11 @@ async function remove(id, user) {
 	await productsRepository.remove(id);
 }
 
-async function find(user) {
+async function find(user, name) {
 	if (user.key !== accessKeys.manager && user.key !== accessKeys.stock)
 		return errorFunctions.unauthorizedError();
+
+	if (name) return productsRepository.findByPartialName(name);
 
 	return await productsRepository.find();
 }

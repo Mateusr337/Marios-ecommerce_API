@@ -16,6 +16,10 @@ async function findById(id) {
 	return await database.product.findUnique({ where: { id } });
 }
 
+async function findByPartialName(name) {
+	return await database.product.findMany({ where: { name: { contains: name } } });
+}
+
 async function update(id, updateProductData) {
 	return await database.product.update({ where: { id }, data: updateProductData });
 }
@@ -31,4 +35,5 @@ export default {
 	update,
 	remove,
 	findById,
+	findByPartialName,
 };
