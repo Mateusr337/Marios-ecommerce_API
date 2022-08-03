@@ -12,6 +12,10 @@ async function findByEmail(email) {
 	return await database.user.findUnique({ where: { email } });
 }
 
+async function findByName(name) {
+	return await database.user.findUnique({ where: { name } });
+}
+
 async function findById(id) {
 	return await database.user.findUnique({ where: { id } });
 }
@@ -21,4 +25,5 @@ export default {
 	find,
 	findByEmail,
 	findById,
+	findByName,
 };

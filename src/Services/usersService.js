@@ -7,6 +7,12 @@ async function create(userCreateData) {
 	await validateKey(userCreateData.authorizationKey);
 	delete userCreateData.authorizationKey;
 
+	let foundUser = await usersRepository.findByName(userCreateData.name);
+	if (foundUser) throw errorFunctions.conflictRequestError('username');
+
+	foundUser = await usersRepository.findByEmail(userCreateData.email);
+	if (foundUser) throw errorFunctions.conflictRequestError('email');
+
 	const encryptPassword = encryptFunctions.encryptData(userCreateData.password);
 	const user = { ...userCreateData, password: encryptPassword };
 
@@ -25,8 +31,8 @@ async function validEmailUser(email) {
 }
 
 async function validateKey(key) {
-	if (key === accessKeys().HR) return;
-	if (key === accessKeys().manager) return;
+	if (key === accessKeys.HR) return;
+	if (key === accessKeys.manager) return;
 
 	throw errorFunctions.unauthorizedError("you can't create user");
 }
