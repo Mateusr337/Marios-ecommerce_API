@@ -13,10 +13,19 @@ async function update({ body, params }, res) {
 	delete body.id;
 
 	const product = await productsService.update(id, body, user);
-	res.send(product).status(204);
+	res.send(product).status(200);
+}
+
+async function remove({ params }, res) {
+	const id = parseInt(params.id);
+	const { user } = res.locals;
+
+	await productsService.remove(id, user);
+	res.sendStatus(204);
 }
 
 export default {
 	create,
 	update,
+	remove,
 };

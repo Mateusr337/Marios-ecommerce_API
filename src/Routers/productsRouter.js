@@ -20,4 +20,6 @@ productsRouter.patch(
 	productsController.update
 );
 
+productsRouter.delete('/:id', ensureAuthenticatedMiddleware, productsController.remove);
+
 export default productsRouter;

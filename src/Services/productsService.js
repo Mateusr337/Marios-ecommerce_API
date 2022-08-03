@@ -19,7 +19,15 @@ async function update(id, updateProductData, user) {
 	return await productsRepository.update(id, updateProductData);
 }
 
+async function remove(id, user) {
+	if (user.key !== accessKeys.manager && user.key !== accessKeys.stock)
+		return errorFunctions.unauthorizedError();
+
+	await productsRepository.remove(id);
+}
+
 export default {
 	create,
 	update,
+	remove,
 };
