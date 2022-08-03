@@ -22,11 +22,24 @@ model User {
 }
 
 model Product {
-  id          Int    @id @default(autoincrement())
-  name        String
-  value       Int
-  quantity    Int    @default(0)
-  type String
+  id       Int     @id @default(autoincrement())
+  name     String
+  value    Int
+  quantity Int     @default(0)
+  type     String
+  Order    Order[]
 
   @@map("products")
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  type      String
+  productId Int
+  Product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  value     Int
+  date      DateTime @default(now())
+
+  @@map("orders")
 }

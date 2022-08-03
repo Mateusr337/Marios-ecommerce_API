@@ -42,10 +42,18 @@ async function findById(id, user) {
 	return await productsRepository.findById(id);
 }
 
+async function findByIdOrFail(id, user) {
+	const product = await findById(id, user);
+	if (!product) throw errorFunctions.notFoundError('product no exist');
+
+	return product;
+}
+
 export default {
 	create,
 	update,
 	remove,
 	find,
 	findById,
+	findByIdOrFail,
 };
