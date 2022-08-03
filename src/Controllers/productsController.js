@@ -24,8 +24,16 @@ async function remove({ params }, res) {
 	res.sendStatus(204);
 }
 
+async function find(req, res) {
+	const { user } = res.locals;
+
+	const products = await productsService.find(user);
+	res.send(products).status(200);
+}
+
 export default {
 	create,
 	update,
 	remove,
+	find,
 };

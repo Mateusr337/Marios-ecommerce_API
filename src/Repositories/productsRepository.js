@@ -9,7 +9,7 @@ async function findByName(name) {
 }
 
 async function find() {
-	return await database.product.findFirst();
+	return await database.product.findMany();
 }
 
 async function update(id, updateProductData) {

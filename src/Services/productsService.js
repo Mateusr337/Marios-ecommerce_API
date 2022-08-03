@@ -26,8 +26,16 @@ async function remove(id, user) {
 	await productsRepository.remove(id);
 }
 
+async function find(user) {
+	if (user.key !== accessKeys.manager && user.key !== accessKeys.stock)
+		return errorFunctions.unauthorizedError();
+
+	return await productsRepository.find();
+}
+
 export default {
 	create,
 	update,
 	remove,
+	find,
 };

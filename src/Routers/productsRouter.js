@@ -13,6 +13,8 @@ productsRouter.post(
 	productsController.create
 );
 
+productsRouter.get('/', ensureAuthenticatedMiddleware, productsController.find);
+
 productsRouter.patch(
 	'/:id',
 	ensureAuthenticatedMiddleware,
