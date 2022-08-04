@@ -5,8 +5,8 @@ import userFactory from './userFactory';
 
 const agent = supertest(app);
 
-async function createLogin() {
-	const user = await userFactory.createUser();
+async function createLogin(key) {
+	const user = await userFactory.createUser(key);
 
 	const { body } = await agent.post('/auth/login').send({
 		email: user.email,

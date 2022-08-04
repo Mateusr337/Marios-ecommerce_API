@@ -4,7 +4,7 @@ import errorFunctions from '../utils/errorFunctions.js';
 
 async function create(createProductData, user) {
 	if (user.key !== accessKeys.manager && user.key !== accessKeys.stock)
-		return errorFunctions.unauthorizedError();
+		throw errorFunctions.unauthorizedError();
 
 	const foundProduct = await productsRepository.findByName(createProductData.name);
 	if (foundProduct) throw errorFunctions.conflictRequestError('name');
