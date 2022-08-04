@@ -147,8 +147,6 @@ describe('Route /products', () => {
 			const { token } = await authFactory.createLogin();
 			const { body: product } = await productFactory.createProduct(token);
 
-			console.log(product);
-
 			const authorization = configToken(token);
 			const { body, status } = await agent
 				.get(`/products/${product.id}`)
@@ -156,6 +154,23 @@ describe('Route /products', () => {
 
 			expect(body).not.toBeNull();
 			expect(status).toEqual(200);
+		});
+	});
+
+	describe('DELETE /products/:id', () => {
+		it('should answer with code 204 and delete product by id', async () => {
+			const { token } = await authFactory.createLogin();
+			const { body: product } = await productFactory.createProduct(token);
+
+			const authorization = configToken(token);
+			const { status } = await agent
+				.delete(`/products/${product.id}`)
+				.set(authorization);
+
+			const products = await database.product.findMany();
+
+			expect(products).toHaveLength(0);
+			expect(status).toEqual(204);
 		});
 	});
 });
