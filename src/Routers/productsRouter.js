@@ -3,6 +3,7 @@ import productsController from '../Controllers/productsController.js';
 import ensureAuthenticatedMiddleware from '../Middlewares/ensureAuthenticatedMiddleware.js';
 import validateSchemaMiddleware from '../Middlewares/validateSchemaMiddleware.js';
 import createProductSchema from '../schemas/createProductSchema.js';
+import updateProductSchema from '../schemas/updateProductSchema.js';
 
 const productsRouter = Router();
 
@@ -16,7 +17,7 @@ productsRouter.post(
 productsRouter.patch(
 	'/:id',
 	ensureAuthenticatedMiddleware,
-	validateSchemaMiddleware(createProductSchema),
+	validateSchemaMiddleware(updateProductSchema),
 	productsController.update
 );
 

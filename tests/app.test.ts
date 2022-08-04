@@ -173,4 +173,25 @@ describe('Route /products', () => {
 			expect(status).toEqual(204);
 		});
 	});
+
+	describe('PATCH /products/:id', () => {
+		it('should answer with code 200 and update product by id', async () => {
+			const { token } = await authFactory.createLogin();
+			const { body: product } = await productFactory.createProduct(token);
+
+			const authorization = configToken(token);
+			const newName = 'aze';
+			const { status, body } = await agent
+				.patch(`/products/${product.id}`)
+				.send({ name: newName })
+				.set(authorization);
+
+			const updateProduct = await database.product.findUnique({
+				where: { id: product.id },
+			});
+
+			expect(updateProduct?.name).toEqual(newName);
+			expect(status).toEqual(200);
+		});
+	});
 });
