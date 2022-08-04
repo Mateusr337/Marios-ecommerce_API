@@ -6,7 +6,8 @@ async function create(req, res) {
 }
 
 async function find(req, res) {
-	const users = await usersService.find();
+	const { user } = res.locals;
+	const users = await usersService.find(user);
 	res.status(200).send(users);
 }
 

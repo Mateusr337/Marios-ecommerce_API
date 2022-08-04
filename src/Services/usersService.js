@@ -19,7 +19,8 @@ async function create(userCreateData) {
 	return await usersRepository.create(user);
 }
 
-async function find() {
+async function find(user) {
+	validateAuthorization(user);
 	return await usersRepository.find();
 }
 
@@ -39,6 +40,11 @@ async function validateKey(key) {
 
 async function findById(id) {
 	return await usersRepository.findById(id);
+}
+
+function validateAuthorization(key) {
+	if (key !== accessKeys.manager && key !== accessKeys.HR)
+		return errorFunctions.unauthorizedError();
 }
 
 export default {

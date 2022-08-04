@@ -1,3 +1,8 @@
+import supertest from 'supertest';
+import app from '../../src/app';
+
+const agent = supertest(app);
+
 function userInsertData() {
 	const userData = {
 		name: 'mateus',
@@ -10,6 +15,16 @@ function userInsertData() {
 	return userData;
 }
 
+async function createUser() {
+	const userData = userInsertData();
+	const { body } = await agent.post('/users').send(userData);
+	return {
+		...body,
+		cleanPassword: userData.password,
+	};
+}
+
 export default {
 	userInsertData,
+	createUser,
 };
