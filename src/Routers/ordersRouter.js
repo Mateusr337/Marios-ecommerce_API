@@ -13,4 +13,7 @@ ordersRouter.post(
 	ordersController.create
 );
 
+ordersRouter.get('/', ensureAuthenticatedMiddleware, ordersController.find);
+ordersRouter.get('/:id', ensureAuthenticatedMiddleware, ordersController.findById);
+
 export default ordersRouter;

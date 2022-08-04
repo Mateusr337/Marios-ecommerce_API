@@ -2,9 +2,9 @@ import ordersRepository from '../Repositories/ordersRepository.js';
 import errorFunctions from '../utils/errorFunctions.js';
 import productsService from './productsService.js';
 import accessKeys from '../utils/accessKeys.js';
+import usersRepository from '../Repositories/usersRepository.js';
 
 async function create(createOrderData, user) {
-	console.log(user);
 	validateAuthorization(user.key);
 	validateEntry(createOrderData);
 
@@ -17,6 +17,24 @@ async function create(createOrderData, user) {
 	}
 
 	return await ordersRepository.create(createOrderData);
+}
+
+async function find(user) {
+	validateAuthorization(user.key);
+	return await ordersRepository.find();
+}
+
+async function findById(id, user) {
+	validateAuthorization(user.key);
+	return await ordersRepository.findById(id);
+}
+
+async function findByIdOrFail(id, user) {
+	validateAuthorization(user.key);
+	const order = await ordersRepository.findById(id);
+	if (!order) throw errorFunctions.notFoundError('order');
+
+	return order;
 }
 
 function validateAuthorization(key) {
@@ -49,4 +67,7 @@ async function buyProduct(product, user) {
 
 export default {
 	create,
+	find,
+	findById,
+	findByIdOrFail,
 };

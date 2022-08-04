@@ -268,4 +268,34 @@ describe('Route /orders', () => {
 			expect(product.quantity).toEqual(0);
 		});
 	});
+
+	describe('GET /orders', () => {
+		it('should answer with code 200 and orders', async () => {
+			const { token } = await authFactory.createLogin();
+			const { body: product } = await productFactory.createProduct(token, 2);
+			await orderFactory.createOrder(token, product.id);
+
+			const authorization = configToken(token);
+			const { body, status } = await agent.get('/orders').set(authorization);
+
+			expect(status).toEqual(200);
+			expect(body).toHaveLength(1);
+		});
+	});
+
+	describe('GET /orders/:id', () => {
+		it('should answer with code 200 and order by id', async () => {
+			const { token } = await authFactory.createLogin();
+			const { body: product } = await productFactory.createProduct(token, 2);
+			await orderFactory.createOrder(token, product.id);
+
+			const authorization = configToken(token);
+			const { body, status } = await agent
+				.get(`/orders/${product.id}`)
+				.set(authorization);
+
+			expect(status).toEqual(200);
+			expect(body).not.toBeUndefined();
+		});
+	});
 });
