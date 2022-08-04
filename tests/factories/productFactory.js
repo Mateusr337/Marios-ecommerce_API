@@ -11,8 +11,8 @@ function insertProductData(quantity) {
 	};
 }
 
-async function createProduct(token) {
-	const productInsertData = insertProductData();
+async function createProduct(token, quantity) {
+	const productInsertData = insertProductData(quantity);
 	const authorization = configToken(token);
 
 	const { status, body } = await agent

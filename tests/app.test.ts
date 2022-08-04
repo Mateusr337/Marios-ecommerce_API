@@ -3,6 +3,7 @@ import app from '../src/app.js';
 import database from '../src/database.js';
 import accessKeys from '../src/utils/accessKeys.js';
 import authFactory from './factories/authFactory.js';
+import orderFactory from './factories/orderFactory.js';
 import productFactory from './factories/productFactory.js';
 import userFactory from './factories/userFactory.js';
 import clearDatabase from './utils/clearDatabase.js';
@@ -115,8 +116,6 @@ describe('Route /products', () => {
 			const productInsertData = productFactory.insertProductData();
 			const authorization = configToken(token);
 
-			console.log(user);
-
 			const { status } = await agent
 				.post('/products')
 				.send(productInsertData)
@@ -179,8 +178,9 @@ describe('Route /products', () => {
 			const { token } = await authFactory.createLogin();
 			const { body: product } = await productFactory.createProduct(token);
 
-			const authorization = configToken(token);
 			const newName = 'aze';
+			const authorization = configToken(token);
+
 			const { status, body } = await agent
 				.patch(`/products/${product.id}`)
 				.send({ name: newName })
@@ -192,6 +192,80 @@ describe('Route /products', () => {
 
 			expect(updateProduct?.name).toEqual(newName);
 			expect(status).toEqual(200);
+		});
+	});
+});
+
+describe('Route /orders', () => {
+	describe('POST /orders', () => {
+		it('should answer with code 201 and created order type buy', async () => {
+			const { token } = await authFactory.createLogin();
+			let { body: product } = await productFactory.createProduct(token);
+
+			const createOrderData = orderFactory.insertOrderData('buy', product.id);
+			const authorization = configToken(token);
+
+			const { body, status } = await agent
+				.post('/orders')
+				.send(createOrderData)
+				.set(authorization);
+
+			const orders = await database.order.findMany();
+			product = await database.product.findUnique({
+				where: { id: product.id },
+			});
+
+			expect(status).toEqual(201);
+			expect(body.id).not.toBeUndefined();
+			expect(orders).toHaveLength(1);
+			expect(product.quantity).toEqual(1);
+		});
+
+		it('should answer with code 201 and created order type sold', async () => {
+			const { token } = await authFactory.createLogin();
+			let { body: product } = await productFactory.createProduct(token, 1);
+
+			const createOrderData = orderFactory.insertOrderData('sold', product.id);
+			const authorization = configToken(token);
+
+			const { body, status } = await agent
+				.post('/orders')
+				.send(createOrderData)
+				.set(authorization);
+
+			const orders = await database.order.findMany();
+			product = await database.product.findUnique({
+				where: { id: product.id },
+			});
+
+			expect(status).toEqual(201);
+			expect(body.id).not.toBeUndefined();
+			expect(orders).toHaveLength(1);
+			expect(product.quantity).toEqual(0);
+		});
+
+		it('should answer with code 401 when user not authorized', async () => {
+			const { token: tokenHR } = await authFactory.createLogin(accessKeys.HR);
+			const { token: tokenMG } = await authFactory.createLogin();
+			let { body: product } = await productFactory.createProduct(tokenMG);
+
+			const createOrderData = orderFactory.insertOrderData('buy', product.id);
+			const authorizationMG = configToken(tokenHR);
+
+			const { body, status } = await agent
+				.post('/orders')
+				.send(createOrderData)
+				.set(authorizationMG);
+
+			const orders = await database.order.findMany();
+			product = await database.product.findUnique({
+				where: { id: product.id },
+			});
+
+			expect(status).toEqual(401);
+			expect(body.id).toBeUndefined();
+			expect(orders).toHaveLength(0);
+			expect(product.quantity).toEqual(0);
 		});
 	});
 });

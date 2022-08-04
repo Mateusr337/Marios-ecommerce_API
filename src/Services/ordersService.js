@@ -4,25 +4,29 @@ import productsService from './productsService.js';
 import accessKeys from '../utils/accessKeys.js';
 
 async function create(createOrderData, user) {
+	console.log(user);
 	validateAuthorization(user.key);
 	validateEntry(createOrderData);
 
 	const product = await productsService.findByIdOrFail(createOrderData.productId, user);
 
-	if (product.quantity < 1)
-		throw errorFunctions.badRequestError('empty stock this product');
+	if (createOrderData.type === 'sold') {
+		await soldProduct(product, user);
+	} else {
+		await buyProduct(product, user);
+	}
 
-	await soldProduct(product, user);
 	return await ordersRepository.create(createOrderData);
 }
 
 function validateAuthorization(key) {
 	if (key !== accessKeys.manager && key !== accessKeys.financial)
-		return errorFunctions.unauthorizedError();
+		throw errorFunctions.unauthorizedError();
 }
 
 function validateEntry(data) {
 	const types = ['sold', 'buy'];
+
 	if (!types.includes(data.type))
 		throw errorFunctions.badRequestError('type must be "sold" or "buy"');
 
@@ -31,8 +35,15 @@ function validateEntry(data) {
 }
 
 async function soldProduct(product, user) {
-	product.quantity -= 1;
+	if (product.quantity < 1)
+		throw errorFunctions.badRequestError('empty stock this product');
 
+	product.quantity -= 1;
+	await productsService.update(product.id, product, user);
+}
+
+async function buyProduct(product, user) {
+	product.quantity += 1;
 	await productsService.update(product.id, product, user);
 }
 
