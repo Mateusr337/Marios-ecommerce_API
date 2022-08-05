@@ -11,9 +11,9 @@ async function create(createOrderData, user) {
 	const product = await productsService.findByIdOrFail(createOrderData.productId, user);
 
 	if (createOrderData.type === 'sold') {
-		await soldProduct(product, user);
+		await soldProduct(product, createOrderData, user);
 	} else {
-		await buyProduct(product, user);
+		await buyProduct(product, createOrderData, user);
 	}
 
 	return await ordersRepository.create(createOrderData);
@@ -21,8 +21,6 @@ async function create(createOrderData, user) {
 
 async function find(user, queries) {
 	validateAuthorization(user.key);
-
-	console.log(queries.productId, queries.type);
 
 	if (queries.productId) {
 		return await ordersRepository.findByProductId(queries.productId);
@@ -63,17 +61,17 @@ function validateType(type) {
 		throw errorFunctions.badRequestError('type must be "sold" or "buy"');
 }
 
-async function soldProduct(product, user) {
-	if (product.quantity < 1)
-		throw errorFunctions.badRequestError('empty stock this product');
+async function soldProduct(product, createOrderData, user) {
+	if (product.quantity < createOrderData.quantity)
+		throw errorFunctions.badRequestError('no have this quantity');
 
-	product.quantity -= 1;
-	await productsService.update(product.id, product, user);
+	const newQuantity = product.quantity - createOrderData.quantity;
+	await productsService.update(product.id, { quantity: newQuantity }, user);
 }
 
-async function buyProduct(product, user) {
-	product.quantity += 1;
-	await productsService.update(product.id, product, user);
+async function buyProduct(product, createOrderData, user) {
+	const newQuantity = product.quantity + createOrderData.quantity;
+	await productsService.update(product.id, { quantity: newQuantity }, user);
 }
 
 export default {
