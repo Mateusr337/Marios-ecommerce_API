@@ -19,8 +19,17 @@ async function create(createOrderData, user) {
 	return await ordersRepository.create(createOrderData);
 }
 
-async function find(user) {
+async function find(user, queries) {
 	validateAuthorization(user.key);
+
+	console.log(queries.productId, queries.type);
+
+	if (queries.productId) {
+		return await ordersRepository.findByProductId(queries.productId);
+	} else if (queries.type) {
+		return await ordersRepository.findByType(queries.type);
+	}
+
 	return await ordersRepository.find();
 }
 
@@ -43,13 +52,15 @@ function validateAuthorization(key) {
 }
 
 function validateEntry(data) {
-	const types = ['sold', 'buy'];
-
-	if (!types.includes(data.type))
-		throw errorFunctions.badRequestError('type must be "sold" or "buy"');
-
+	validateType(data.type);
 	if (data.quantity < 1)
 		throw errorFunctions.badRequestError('quantity must be gran more than 0');
+}
+
+function validateType(type) {
+	const types = ['sold', 'buy'];
+	if (!types.includes(type))
+		throw errorFunctions.badRequestError('type must be "sold" or "buy"');
 }
 
 async function soldProduct(product, user) {
@@ -70,4 +81,5 @@ export default {
 	find,
 	findById,
 	findByIdOrFail,
+	validateType,
 };

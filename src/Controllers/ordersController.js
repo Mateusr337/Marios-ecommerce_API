@@ -1,4 +1,5 @@
 import ordersService from '../Services/ordersService.js';
+import errorFunctions from '../utils/errorFunctions.js';
 
 async function create({ body }, res) {
 	const { user } = res.locals;
@@ -7,10 +8,16 @@ async function create({ body }, res) {
 	res.status(201).send(order);
 }
 
-async function find(req, res) {
+async function find({ query }, res) {
 	const { user } = res.locals;
+	const productId = parseInt(query.productId) || null;
 
-	const orders = await ordersService.find(user);
+	if (query.type) ordersService.validateType(query.type);
+
+	if (productId && typeof productId !== 'number')
+		throw errorFunctions.badRequestError('query productId must be number');
+
+	const orders = await ordersService.find(user, { ...query, productId });
 	res.status(200).send(orders);
 }
 

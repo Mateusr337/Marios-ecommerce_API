@@ -281,6 +281,39 @@ describe('Route /orders', () => {
 			expect(status).toEqual(200);
 			expect(body).toHaveLength(1);
 		});
+
+		it('should answer with code 200 and orders with productId filter', async () => {
+			const { token } = await authFactory.createLogin();
+			const { body: product1 } = await productFactory.createProduct(token, 2);
+			const { body: product2 } = await productFactory.createProduct(token, 2);
+
+			await orderFactory.createOrder(token, product1.id);
+			await orderFactory.createOrder(token, product2.id);
+
+			const authorization = configToken(token);
+			const { body, status } = await agent
+				.get(`/orders?productId=${product1.id}`)
+				.set(authorization);
+
+			expect(status).toEqual(200);
+			expect(body).toHaveLength(1);
+		});
+
+		it('should answer with code 200 and orders with type:buy filter', async () => {
+			const { token } = await authFactory.createLogin();
+			const { body: product } = await productFactory.createProduct(token, 2);
+
+			await orderFactory.createOrder(token, product.id, 'buy');
+			await orderFactory.createOrder(token, product.id, 'sold');
+
+			const authorization = configToken(token);
+			const { body, status } = await agent
+				.get(`/orders?type=buy`)
+				.set(authorization);
+
+			expect(status).toEqual(200);
+			expect(body).toHaveLength(1);
+		});
 	});
 
 	describe('GET /orders/:id', () => {
