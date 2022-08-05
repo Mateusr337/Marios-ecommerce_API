@@ -6,19 +6,19 @@ Uma API para funcionarios de um e-commerce, podendo gerenciais podrutos, compras
 
 ## :hammer: Features
 
-# Usuários - auth: manager e HR
+### Usuários - auth: manager e HR
 
 :ballot_box_with_check: `POST /users` Cadastra usuarios, recebe name, email, password, key, active (opcional), authorizationKey;
 
 :ballot_box_with_check: `GET /users` Busca usuários;
 
 
-# Autenticação
+### Autenticação
 
 :ballot_box_with_check: `POST /login` Valida a autenticação de um usuário, recebe email, password.
 
 
-# Produtos - auth: manager and stock
+### Produtos - auth: manager and stock
 
 :ballot_box_with_check: `POST /product` Cria um produto, recebe name, value, type, quantity.
 
@@ -31,13 +31,16 @@ Uma API para funcionarios de um e-commerce, podendo gerenciais podrutos, compras
 :ballot_box_with_check: `DELETE /products/:id` Deleta o produto pelo id.
 
 
-# Orders - auth: manager and finances
+### Orders - auth: manager and finances
 
 :ballot_box_with_check: `POST /orders` Cria uma order, recebe productId, value, type, quantity.
 
 :ballot_box_with_check: `GET /orders` Retorna as orders, recebe filtro "query param":productId and type. 
 
 :ballot_box_with_check: `GET /orders/:id` Retorna a order pelo id.
+
+<br />
+<br />
 
 
 ## :woman_technologist: Technologias
@@ -49,6 +52,8 @@ Uma API para funcionarios de um e-commerce, podendo gerenciais podrutos, compras
     <img src="https://img.shields.io/badge/supertest-141526?style=for-the-badge&logo=jest&logoColor=ffffff"/>
     <img src="https://img.shields.io/badge/joi-000000?style=for-the-badge&logo=joi&logoColor=ffffff"/>
 </div>
+
+<br />
 
 ## :tada: Inicialização
 
